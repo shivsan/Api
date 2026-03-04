@@ -1,8 +1,8 @@
-package com.example.api.Service
+package com.example.api.service
 
-import com.example.api.Dto.CreateCustomerRequest
-import com.example.api.Model.Customer
-import com.example.api.Repository.CustomerRepository
+import com.example.api.dto.CreateCustomerRequest
+import com.example.api.model.Customer
+import com.example.api.repository.CustomerRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.util.NoSuchElementException
+import java.util.Optional
 
 class CustomerServiceTest {
 
@@ -31,14 +32,25 @@ class CustomerServiceTest {
 
     @Test
     fun `delete throws when id does not exist`() {
-        every { customerRepository.existsById(42) } returns false
+        every { customerRepository.findById(42) } returns Optional.empty()
 
         assertThrows(NoSuchElementException::class.java) {
             customerService.delete(42)
         }
 
-        verify(exactly = 1) { customerRepository.existsById(42) }
-        verify(exactly = 0) { customerRepository.deleteById(any()) }
+        verify(exactly = 1) { customerRepository.findById(42) }
+        verify(exactly = 0) { customerRepository.delete(any()) }
+    }
+
+    @Test
+    fun `delete removes customer when id exists`() {
+        val customer = Customer(id = 2, name = "Bob", phno = "456", city = "Delhi")
+        every { customerRepository.findById(2) } returns Optional.of(customer)
+        every { customerRepository.delete(customer) } returns Unit
+
+        customerService.delete(2)
+
+        verify(exactly = 1) { customerRepository.delete(customer) }
     }
 
     @Test

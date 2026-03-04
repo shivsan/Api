@@ -1,6 +1,6 @@
-package com.example.api.Exception
+package com.example.api.exception
 
-import com.example.api.Dto.ErrorResponse
+import com.example.api.dto.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException

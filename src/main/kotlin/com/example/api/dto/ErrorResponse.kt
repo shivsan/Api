@@ -1,4 +1,4 @@
-package com.example.api.Dto
+package com.example.api.dto
 
 class ErrorResponse(
     val error: String,

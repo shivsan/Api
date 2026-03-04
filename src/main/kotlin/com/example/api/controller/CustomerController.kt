@@ -1,8 +1,8 @@
-package com.example.api.Controller
+package com.example.api.controller
 
-import com.example.api.Dto.CreateCustomerRequest
-import com.example.api.Model.Customer
-import com.example.api.Service.CustomerService
+import com.example.api.dto.CreateCustomerRequest
+import com.example.api.dto.CustomerResponse
+import com.example.api.service.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,13 +20,13 @@ class CustomerController(private val customerService: CustomerService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun addNewCustomer(@Valid @RequestBody request: CreateCustomerRequest): Customer {
-        return customerService.add(request)
+    fun addNewCustomer(@Valid @RequestBody request: CreateCustomerRequest): CustomerResponse {
+        return customerService.add(request).toResponse()
     }
 
     @GetMapping
-    fun getCustomers(): Iterable<Customer> {
-        return customerService.get()
+    fun getCustomers(): List<CustomerResponse> {
+        return customerService.get().map { it.toResponse() }
     }
 
     @DeleteMapping("/{id}")

@@ -1,8 +1,8 @@
-package com.example.api.Controller
+package com.example.api.controller
 
-import com.example.api.Dto.CreateCustomerRequest
-import com.example.api.Model.Customer
-import com.example.api.Service.CustomerService
+import com.example.api.dto.CreateCustomerRequest
+import com.example.api.model.Customer
+import com.example.api.service.CustomerService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -63,12 +63,13 @@ class CustomerControllerTest {
     }
 
     @Test
-    fun `get customers returns list`() {
+    fun `get customers returns list of DTO responses`() {
         given(customerService.get()).willReturn(listOf(Customer(id = 1, name = "Alice", phno = "123", city = "Pune")))
 
         mockMvc.perform(get("/customers"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[0].name").value("Alice"))
 
         then(customerService).should().get()
     }
