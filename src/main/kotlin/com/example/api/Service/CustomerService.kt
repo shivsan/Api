@@ -1,27 +1,27 @@
 package com.example.api.Service
 
+import com.example.api.Dto.CreateCustomerRequest
 import com.example.api.Model.Customer
 import com.example.api.Repository.CustomerRepository
 import org.springframework.stereotype.Service
+import java.util.NoSuchElementException
 
 @Service
-public class CustomerService (private val CRepository: CustomerRepository){
+class CustomerService(private val customerRepository: CustomerRepository) {
 
-
-
-    public fun add(name: String, phno: String, city: String){
-        val n= Customer(0, "", "", "")
-        n.setName(name)
-        n.setPhno(phno)
-        n.setPhno(city)
-        CRepository.save(n)
+    fun add(request: CreateCustomerRequest): Customer {
+        val customer = Customer(name = request.name, phno = request.phno, city = request.city)
+        return customerRepository.save(customer)
     }
 
-    public fun get(): MutableIterable<Customer>? {
-        return CRepository.findAll()
+    fun get(): Iterable<Customer> {
+        return customerRepository.findAll()
     }
 
-    public fun delete(id: Int) {
-        CRepository.deleteById(id)
+    fun delete(id: Int) {
+        if (!customerRepository.existsById(id)) {
+            throw NoSuchElementException("Customer with id $id was not found")
+        }
+        customerRepository.deleteById(id)
     }
 }
